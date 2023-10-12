@@ -1,0 +1,121 @@
+from random import randrange
+
+def display_board(board):
+    # The function accepts one parameter containing the board's current status
+    # and prints it out to the console.
+    print('+-------+-------+-------+')
+    print('|       |       |       |')
+    print('|  ', board[0][0], '  |  ', board[0][1], '  |  ', board[0][2], '  |')
+    print('|       |       |       |')
+    print('+-------+-------+-------+')
+    print('|       |       |       |')
+    print('|  ', board[1][0], '  |  ', board[1][1], '  |  ', board[1][2], '  |')
+    print('|       |       |       |')
+    print('+-------+-------+-------+')
+    print('|       |       |       |')
+    print('|  ', board[2][0], '  |  ', board[2][1], '  |  ', board[2][2], '  |')
+    print('|       |       |       |')
+    print('+-------+-------+-------+')
+   
+
+def enter_move(board):
+    while True:
+        move = int(input("Please pick a number within the range of squares (1-9):"))
+        if move < 1 or move > 9:
+            print('Please pick a number in the range of 1 through 9:')
+        elif str(move) not in [str(num) for row in board for num in row]:
+            print('Sorry, that spot is already taken. Pick a new number:')
+        else:
+            for row in range(3):
+                for column in range(3):
+                    if board[row][column] == str(move):
+                        board[row][column] = 'O'
+                        return
+
+
+def make_list_of_free_fields(board):
+    global free_squares
+    free_squares = [ ]
+    for row in range (0,3):
+        for column in range(0,3):
+            if board [row][column] == 'X' or board[row][column] == 'O':
+                pass
+            else:
+                free_squares.append(([row],[column]))
+                print(free_squares)
+    
+    # The function browses the board and builds a list of all the free squares; 
+    # the list consists of tuples, while each tuple is a pair of row and column numbers.
+
+def victory_for(board, sign):
+    if sign =='O':
+        print('Checking to see if human has won')
+    else:
+        print('Checking to see if cpu has won')
+  
+    if board[0][0] == sign and board[0][1] == sign and board[0][2] == sign:
+        return True
+    elif board[1][0] == sign and board[1][1] == sign and board[1][2] == sign:
+       return True
+    elif board[2][0] == sign and board[2][1] == sign and board[2][2] == sign:
+        return True
+    elif board[0][0] == sign and board[1][0] == sign and board[2][0] == sign:
+        return True
+    elif board[0][1] == sign and board[1][1] == sign and board[2][1] == sign:
+        return True
+    elif board[0][2] == sign and board[1][2] == sign and board[2][2] == sign:
+        return True
+    elif board[0][0] == sign and board[1][1] == sign and board[2][2] == sign:
+        return True
+    elif board[2][0] == sign and board[1][1] == sign and board[0][2] == sign:
+        return True
+    else:
+        print('There is no winner yet!')
+    # The function analyzes the board's status in order to check if 
+    # the player using 'O's or 'X's has won the game
+
+
+def draw_move(board):
+    while True:
+        row = randrange(3)
+        column = randrange(3)
+        if ([row], [column]) not in free_squares:
+            continue
+        else:
+            board[row][column] = 'X'
+            return
+
+board = [['1', '2', '3'], ['4', 'X', '6'], ['7', '8', '9']]
+human = 'O'
+cpu = 'X'
+num_moves = 1
+display_board(board)
+
+while num_moves < 9:
+    enter_move(board)
+    num_moves += 1
+    display_board(board)
+    if victory_for(board, human) == True:
+        print('Player has won!!!')
+        break
+    else:
+        print('Keep going')
+        make_list_of_free_fields(board)
+        print()
+        display_board(board)
+    print()
+    print("cpu's turn")
+    draw_move(board)
+    num_moves += 1
+    display_board(board)
+    print()
+    
+    if victory_for(board, cpu) == True:
+        print('Cpu has won the game!!!')
+        break
+    else:
+        print('Keep going')
+        print()
+        display_board(board)
+else:
+    print('There is no winner!')
